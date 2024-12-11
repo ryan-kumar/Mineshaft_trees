@@ -1,2 +1,3 @@
-# Mineshaft_trees
-personal testing repo for mining trees.
+# Mineshaft Trees
+
+Uses the standard cs128 dev container 
