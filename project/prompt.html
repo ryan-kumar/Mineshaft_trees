@@ -1,0 +1,152 @@
+<style>
+    /* Styling the responsive image grid */
+    .image-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Adjusts column number based on screen width */
+        gap: 10px;
+    }
+    .image-grid img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+    .important {
+    background-color: #ffe6e6; 
+    border-left: 5px solid #ff4d4d; 
+    padding: 10px;
+    margin-bottom: 20px;
+    color: #000; 
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s; 
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+    .important {
+        background-color: #8B0000; 
+        border-left: 5px solid #ff7878; 
+        color: #fff; /
+    }
+}
+    body {
+        margin: 20px;
+        font-family: Arial, sans-serif;
+    }
+</style>
+
+<h2>LinkedUp</h2>
+
+<p>Graphs are unique data structures that store information non-linearly, through a set of vertices and a set of edges that connect them. 
+    Graphs are able to represent relationships between its stored elements, which can allow us to model and solve a wide variety of problems that concern connectivity.</p>
+
+<p>In this activity, you will implement the famous business and employment social network, LinkedUp, using an Adjacency List Graph representation. 
+    LinkedUp supports functionality that allows for the management and retrieval of relevant information on the people stored within.</p>
+
+<p>You will work within the LinkedUp class to complete your implementation.</p>
+<p>Here's a brief overview of this class:</p>
+
+
+<div class="box"><pre><code class="language-cpp line-numbers">// class header in linked_up.hpp 
+class LinkedUp {
+    public:
+        LinkedUp() = default;
+        LinkedUp(const std::string& people_file, const std::string& connections_file);
+        void AddPerson(const std::string& name);
+        void AddConnection(const std::string& person_one,
+                            const std::string& person_two);
+        std::vector&lt;std::vector&lt;std::string>> GetCliques();
+        int FindShortestLinkageLength(const std::string& person_one,
+                                    const std::string& person_two);
+        std::vector&lt;std::string> FindShortestLinkagePath(
+            const std::string& person_one, const std::string& person_two);
+        std::vector&lt;std::string> FindNthDegreeConnections(const std::string& person,
+                                                        int degree);
+
+        friend std::ostream& operator&lt;&lt;(std::ostream& os, const LinkedUp& network);
+
+    private:
+        std::vector&lt;std::string> Split(const std::string& str, char delimiter);
+        std::map&lt;std::string, std::vector&lt;std::string>> network_;
+};
+</code></pre></div>
+
+<h3>Helper Functions:</h3>
+
+<pre><code class="language-cpp">std::vector&lt;std::string> Split(const std::string& str, char delimiter);</code></pre>
+<ul>
+    <li>Splits the passed in std::string <i>str</i>, based on the <i>delimiter</i> character.</li>
+    <li>Returns a vector of std::strings represent each split piece.</li>
+</ul>
+
+<pre><code class="language-cpp">friend std::ostream& operator&lt;&lt;(std::ostream& os, const SocialNetwork& network);</code></pre>
+<ul>
+    <li>Overloaded insertion operator; displays each vertex in the graph along with their connections.</li>
+    <li>Vertices displayed will be divided by the connected component they belong to.</li>
+</ul>
+
+<h3>Functions to Implement:</h3>
+
+<pre><code class="language-cpp">LinkedUp(const std::string& people_file, const std::string& connections_file);</code></pre>
+<ul>
+    <li>Constructs a new LinkedUp instance based on the information within the specified people and connections files.</li>
+    <li>First, parse through the <i>people_file</i>, and add them all into the <i>network_</i> map.</li>
+    <li>Next, parse through the <i>connections_file</i>, and add all connections into the <i>network_</i> map.</li>
+    <li>You may find the Split function useful for this step.</li>
+    <li>If either the people or connections files fail to open, throw an std::runtime_error.</li>
+</ul>
+
+<pre><code class="language-cpp"></code>void AddPerson(const std::string& name);</pre>
+<ul>
+    <li>Adds in a new person to the LinkedUp Network with the specified name.</li>
+    <li>Create a new entry within the <i>network_ </i> map with <i>name</i> as the key, and an empty std::string vector as the value.</li>
+    <li>This effectively inserts a new vertex into the network.</li>
+    <li>If a vertex with the specifed name already exists within <i>network_ </i>, return without making any changes. </li>
+</ul>
+
+<pre><code class="language-cpp">void AddFriendship(const std::string& person_one, const std::string& person_two);</code></pre>
+<ul>
+    <li>Adds in a new friendship between two people within the LinkedUp Network.</li>
+    <li>Both specifed people will have the other added into their neighbors list.</li>
+    <li>This will effectively represent a new edge being added into the network, which joins <i>person_one</i> with <i>person_two</i>.</li>
+    <li>If either <i>person_one</i> or <i>person_two</i> does not exist in the <i>network_</i> map, throw an std::runtime_error.</li>
+    <li>If <i>person_one</i> and <i>person_two</i> are already connected, return without making any changes.</li>
+</ul>
+
+<pre><code class="language-cpp">std::vector&lt;std::vector&lt;std::string>> GetCliques();</code></pre>
+<ul>
+    <li>Finds all connected components within the LinkedUp Network, and returns a two-dimensional std::vector, where each sub vector contains the people that comprise a given component.</li>
+    <li>Iterate through the <i>network_</i> map, and conduct a <b>Breadth-First Search</b> on any vertices that have not yet been explored.</li>
+    <li>As you traverse through a given connected component, push each vertex into a vector. </li>
+    <li>Once traversal has completed, push the newly populated vector into the larger two-dimensional vector to be returned.</li>
+    <li>When all vertices have been explored, return the two-dimensional vector.</li>
+</ul>
+
+<pre><code class="language-cpp">int FindShortestLinkageLength(const std::string& person_one,const std::string& person_two);</code></pre>
+<ul>
+    <li>Returns the length of the shortest linkage from <i>person_one</i> to <i>person_two</i>.</li>
+    <li>Begin from the node representing <i>person_one</i>, and conduct a <b>Breadth-First Search</b> in order to find <i>person_two</i>.</li>
+    <li>Once <i>person_two</i> has been found, return the number of edges that were traversed to find them in the <b>shortest</b> path.</li>
+    <li>If <i>person_two</i> cannot be reached from <i>person_one</i>, return -1.</li>
+    <p><b>HINT:</b> You may find it useful to track how far away each node visited is from the starting node!</p>
+</ul>
+
+<pre><code class="language-cpp">std::vector&lt;std::string> FindShortestLinkagePath(const std::string& person_one, const std::string& person_two);</code></pre>
+<ul>
+    <li>Returns a std::string vector containing the nodes that constitute the shortest linkage from <i>person_one</i> to <i>person_two</i> .</li>
+    <li>Begin from the node representing <i>person_one</i>, and conduct a <b>Breadth-First Search</b> in order to find <i>person_two</i>.</li>
+    <li>Once <i>person_two</i> has been found, begin backtracking through all previously visited nodes that are connected, and push each one into a vector.</li>
+    <li>After all nodes corresponding to the path have been inserted into the vector, return it.</li>
+    <li>If <i>person_two</i> cannot be reached from <i>person_one</i>, return an empty vector.</li>
+    <p><b>HINT:</b> How can you store an association between one node and another one?</p>
+  
+</ul>
+
+<pre><code class="language-cpp">std::vector&lt;std::string> FindNthDegreeConnections(const std::string& person, int degree);</code></pre>
+<ul>
+    <li>Returns a vector storing all people that are of <i>degree</i> distance away from the specified <i>person</i>.</li>
+    <li>Begin from the node representing <i>person</i>, and conduct a <b>Breadth-First Search</b>.</li>
+    <li>During your traversal, keep track of how far each node visited is from the starting node.</li>
+    <li>If a given node visited is <i>degree</i> away from the starting node, push it into the vector to return. </li>
+    <li>If the <i>degree</i> specified exceeds the size of the connected component that the <i>person</i> is within, we will add in all people outside of that component.</li>
+  
+</ul>
+
