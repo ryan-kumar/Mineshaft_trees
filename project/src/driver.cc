@@ -4,16 +4,16 @@
 #include <string>
 #include <thread>
 #include <vector>
-#include "subsurface_map.hpp"
-#include "mineshaft_tree.hpp"
 
+#include "mineshaft_tree.hpp"
+#include "subsurface_map.hpp"
 
 int main(int argc, char* argv[]) {
-  (void) argc;
-  (void) argv;
-  
-  std::cout << "This is main" << std::endl;
-  SubsurfaceMap test("sample/input.txt");
+  (void)argc;
+  (void)argv;
 
+  SubsurfaceMap test("sample/input.txt");
+  system("clear");
+  std::cout << test << std::endl;
   return 0;
 }
