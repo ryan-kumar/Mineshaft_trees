@@ -2,7 +2,8 @@
 
 #include <fstream>
 
-SubsurfaceMap::SubsurfaceMap(const std::string& file_path) {
+SubsurfaceMap::SubsurfaceMap(int startX, const std::string& file_path):
+    startX_(startX) {
   std::ifstream ifs{file_path};
   int height = 0;
   int width = 0;

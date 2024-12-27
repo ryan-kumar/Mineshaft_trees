@@ -15,15 +15,18 @@ struct Location {
 
 class SubsurfaceMap {
 public:
-  SubsurfaceMap() = default;
-  SubsurfaceMap(const std::vector<std::vector<Location>>& map): map_(map){};
-  SubsurfaceMap(const std::string& file_path);
+  // SubsurfaceMap() = default;
+  SubsurfaceMap(int startX, const std::vector<std::vector<Location>>& map):
+      startX_(startX), map_(map){};
+  SubsurfaceMap(int startX, const std::string& file_path);
   std::vector<std::vector<std::string>> GetImage() const;
   // need to make interface
-
+  std::vector<std::vector<Location>>& GetMap() { return map_; }
+  int GetStartX() const { return startX_; }
   friend std::ostream& operator<<(std::ostream& os, const SubsurfaceMap& map);
 
 private:
+  int startX_ = 0;
   std::vector<std::vector<Location>> map_;
 };
 

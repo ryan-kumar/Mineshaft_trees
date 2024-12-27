@@ -12,8 +12,9 @@ int main(int argc, char* argv[]) {
   (void)argc;
   (void)argv;
 
-  SubsurfaceMap test("sample/input.txt");
+  SubsurfaceMap test(1, "sample/input.txt");
   system("clear");
   std::cout << test << std::endl;
+  MineshaftTree tree_test(test);
   return 0;
 }
