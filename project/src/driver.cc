@@ -16,5 +16,6 @@ int main(int argc, char* argv[]) {
   system("clear");
   std::cout << test << std::endl;
   MineshaftTree tree_test(test);
+  std::cout << tree_test << std::endl;
   return 0;
 }

@@ -27,11 +27,9 @@ public:
   friend std::ostream& operator<<(std::ostream& os, const MineshaftTree& map);
 
 private:
-  MineshaftNode* Build(const std::vector<std::vector<Location>>& map,
-                       int x,
-                       int y);
+  void Build(MineshaftNode*& node, int x, int y);
   SubsurfaceMap subsurface_map_;
-  MineshaftNode* entrance_;
+  MineshaftNode* entrance_ = nullptr;
 };
 
 #endif
