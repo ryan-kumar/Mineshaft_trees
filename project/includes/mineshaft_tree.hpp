@@ -19,6 +19,8 @@ public:
   MineshaftTree(const MineshaftTree& tree) = delete;
   ~MineshaftTree();
   void Clear(MineshaftNode* node);
+  // returns root if node is not found
+  MineshaftNode*& FindNode(int x, int y);
 
   // needs destructor
   // delete the copy stuff probably
