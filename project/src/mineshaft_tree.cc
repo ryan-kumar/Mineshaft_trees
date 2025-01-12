@@ -22,24 +22,16 @@ void MineshaftTree::Clear(MineshaftNode* node) {
 
 MineshaftTree::MineshaftTree(SubsurfaceMap& location_map):
     subsurface_map_(location_map) {
-  std::cout << "called" << std::endl;
   Build(entrance_, subsurface_map_.GetStartX(), 0);
 }
 void MineshaftTree::Build(MineshaftNode*& node, int x, int y) {
-  const Location& current = subsurface_map_.GetMap()[x][y];
+  if (mineshaftnodes_.contains({x, y})) return;
+  const Location& current = subsurface_map_.GetMap()[y][x];
   node = new MineshaftNode(current, x, y);
-  if (!current.left) {
-    std::cout << "pushed left" << std::endl;
-    Build(node->branches[0], x - 1, y);
-  }
-  if (!current.right) {
-    std::cout << "pushed right" << std::endl;
-    Build(node->branches[1], x + 1, y);
-  }
-  if (!current.down) {
-    std::cout << "pushed down" << std::endl;
-    Build(node->branches[2], x, y + 1);
-  }
+  mineshaftnodes_[{x, y}] = {};
+  if (!current.left) Build(node->branches[0], x - 1, y);
+  if (!current.right) Build(node->branches[1], x + 1, y);
+  if (!current.down) Build(node->branches[2], x, y + 1);
 }
 
 // MineshaftNode* MineshaftTree::Build(
@@ -91,9 +83,8 @@ std::ostream& operator<<(std::ostream& os, const MineshaftTree& map) {
     os << "{" << current_node->x << ", " << current_node->y << "}" << std::endl;
     visited.insert({current_node->x, current_node->y});
     for (auto* child : current_node->branches) {
-      os << "in" << std::endl;
+      // os << "in" << std::endl;
       if (child && !visited.contains({child->x, child->y})) {
-        os << "shoot" << std::endl;
         to_visit.push(child);
       }
     }
