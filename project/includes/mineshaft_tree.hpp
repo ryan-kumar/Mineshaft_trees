@@ -6,6 +6,8 @@
 
 #include "subsurface_map.hpp"
 
+enum Direction { kUP, kDOWN, kLEFT, kRIGHT };
+
 struct MineshaftNode {
   int x = 0;
   int y = 0;
@@ -22,7 +24,7 @@ public:
   void Clear(MineshaftNode* node);
   // returns root if node is not found
   MineshaftNode*& FindNode(int x, int y);
-
+  bool MineWall(int x, int y, Direction dir);
   // needs destructor
   // delete the copy stuff probably
   friend std::ostream& operator<<(std::ostream& os, const MineshaftTree& map);

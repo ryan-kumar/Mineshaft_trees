@@ -24,6 +24,7 @@ MineshaftTree::MineshaftTree(SubsurfaceMap& location_map):
     subsurface_map_(location_map) {
   Build(entrance_, subsurface_map_.GetStartX(), 0);
 }
+
 void MineshaftTree::Build(MineshaftNode*& node, int x, int y) {
   if (mineshaftnodes_.contains({x, y})) return;
   const Location& current = subsurface_map_.GetMap()[y][x];
@@ -34,27 +35,16 @@ void MineshaftTree::Build(MineshaftNode*& node, int x, int y) {
   if (!current.down) Build(node->branches[2], x, y + 1);
 }
 
-// MineshaftNode* MineshaftTree::Build(
-//     const std::vector<std::vector<Location>>& map, int x, int y) {
-//   const Location& current = map[x][y];
-//   MineshaftNode* node = new MineshaftNode(current, x, y);
-//   node->branches[0] = (current.left) ? nullptr : Build(map, x - 1, y);
-//   node->branches[1] = (current.right) ? nullptr : Build(map, x + 1, y);
-//   node->branches[2] = (current.down) ? nullptr : Build(map, x, y + 1);
-//   return node;
-// }
-
 MineshaftNode*& MineshaftTree::FindNode(int x, int y) {
   std::queue<MineshaftNode*> to_visit;
   std::set<std::pair<int, int>> visited;
-  MineshaftNode*& found = entrance_;
+  // MineshaftNode*& found = entrance_;
   to_visit.push(entrance_);
 
   while (!to_visit.empty()) {
     auto*& current_node = to_visit.front();
     if (current_node->x == x && current_node->y == y) {
-      found = current_node;
-      break;
+      return current_node;
     }
     if (visited.contains({current_node->x, current_node->y})) {
       to_visit.pop();
@@ -68,13 +58,21 @@ MineshaftNode*& MineshaftTree::FindNode(int x, int y) {
     }
     to_visit.pop();
   }
-  return found;
+  return entrance_;
+}
+
+bool MineshaftTree::MineWall(int x, int y, Direction dir) {
+  // MineshaftNode*& mining_node = FindNode
+  (void)x;
+  (void)y;
+  (void)dir;
+  return false;
 }
 // do some sort of bfs
 std::ostream& operator<<(std::ostream& os, const MineshaftTree& map) {
   std::queue<MineshaftNode*> to_visit;
   std::set<std::pair<int, int>> visited;
-
+  std::vector<std::pair<int, int>> nodes;
   to_visit.push(map.entrance_);
 
   while (!to_visit.empty()) {
@@ -82,6 +80,7 @@ std::ostream& operator<<(std::ostream& os, const MineshaftTree& map) {
     // process happens here
     os << "{" << current_node->x << ", " << current_node->y << "}" << std::endl;
     visited.insert({current_node->x, current_node->y});
+    nodes.push_back({current_node->x, current_node->y});
     for (auto* child : current_node->branches) {
       // os << "in" << std::endl;
       if (child && !visited.contains({child->x, child->y})) {
