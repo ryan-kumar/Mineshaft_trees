@@ -17,5 +17,8 @@ int main(int argc, char* argv[]) {
   std::cout << test << std::endl;
   MineshaftTree tree_test(test);
   std::cout << tree_test << std::endl;
+  std::cout << "breaking" << std::endl;
+  tree_test.MineWall(0, 1, Direction::kLEFT);
+  std::cout << test << tree_test << std::endl;
   return 0;
 }

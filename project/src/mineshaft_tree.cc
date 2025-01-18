@@ -46,10 +46,10 @@ MineshaftNode*& MineshaftTree::FindNode(int x, int y) {
     if (current_node->x == x && current_node->y == y) {
       return current_node;
     }
-    if (visited.contains({current_node->x, current_node->y})) {
-      to_visit.pop();
-      continue;
-    }
+    // if (visited.contains({current_node->x, current_node->y})) {
+    //   to_visit.pop();
+    //   continue;
+    // }
     visited.insert({current_node->x, current_node->y});
     for (auto* child : current_node->branches) {
       if (child && !visited.contains({child->x, child->y})) {
@@ -62,11 +62,33 @@ MineshaftNode*& MineshaftTree::FindNode(int x, int y) {
 }
 
 bool MineshaftTree::MineWall(int x, int y, Direction dir) {
-  // MineshaftNode*& mining_node = FindNode
-  (void)x;
-  (void)y;
-  (void)dir;
-  return false;
+  MineshaftNode*& mining_node = FindNode(x, y);
+  /// check the specified direction
+  bool success = false;
+  switch (dir) {
+  case kLEFT:
+    if (x == 0) break;
+    subsurface_map_.GetMap()[y][x].left = false;
+    subsurface_map_.GetMap()[y][x - 1].right = false;
+    Build(mining_node->branches[0], x - 1, y);
+    success = true;
+
+  case kRIGHT:
+    if (x == static_cast<int>(subsurface_map_.GetMap()[0].size() - 1)) break;
+    subsurface_map_.GetMap()[y][x].right = false;
+    subsurface_map_.GetMap()[y][x + 1].left = false;
+    Build(mining_node->branches[1], x + 1, y);
+    success = true;
+
+  case kDOWN:
+    if (y == static_cast<int>(subsurface_map_.GetMap().size() - 1)) break;
+    subsurface_map_.GetMap()[y][x].down = false;
+    subsurface_map_.GetMap()[y + 1][x].up = false;
+    Build(mining_node->branches[2], x, y + 1);
+    success = true;
+  }
+
+  return success;
 }
 // do some sort of bfs
 std::ostream& operator<<(std::ostream& os, const MineshaftTree& map) {
@@ -89,6 +111,11 @@ std::ostream& operator<<(std::ostream& os, const MineshaftTree& map) {
     }
     to_visit.pop();
   }
+
+  std::vector<std::vector<std::string>> output;
+  // output.resize(map.subsurface_map_.GetMap().size() * 5,
+  //               std::vector<std::string>(
+  //                   map.subsurface_map_.GetMap()[0].size() * 5, "/"));
 
   return os;
 }
